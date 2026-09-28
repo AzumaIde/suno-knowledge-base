@@ -12,6 +12,7 @@
 4. 実際に使われたStyle / Directiveを検索する
 5. 「こんな雰囲気の曲を作りたい」から実例を逆引きする
 6. Azが曲を聴いたときの主観的な感覚を記録し、後の検索や制作に使う
+7. 取り込み直後に、人間がレビューしやすいHTMLビューを生成する
 
 ---
 
@@ -30,6 +31,7 @@ Markdownファイルを正本とします。
 7. Azの主観と客観解析を分離して保存する
 8. 楽曲構造を一本道に固定しない
 9. 後から分類体系を変更できるよう、生データを残す
+10. HTMLは閲覧UIであり、HTMLのみを編集して知識を更新しない。更新はMarkdown正本へ反映し、HTMLを再生成する
 
 ---
 
@@ -52,6 +54,7 @@ Markdownファイルを正本とします。
 - 初期的な歌詞解析
 - 初期Mermaid構造図
 - song Markdownの生成
+- song Markdownを元にしたレビューHTMLの生成
 
 Workは、取得できなかった情報を補完・創作してはいけません。
 
@@ -67,6 +70,7 @@ GitHubへ取り込み済みのテキストを中心に扱います。
 - 類似曲探索
 - 制作時の逆引き
 - Google Drive等への人間向けまとめ
+- Markdown正本の更新後にHTML再生成を指示・支援
 
 Chatが外部ページへ取り直しに行かなくても成立する情報量を、Workの取り込み時に確保することを目標とします。
 
@@ -198,7 +202,64 @@ Azが短い感想しか残していない場合も、その原文を保存しま
 
 ---
 
-## 5. Creator Record
+## 5. Generated HTML Review
+
+各Song Markdownから、閲覧用レビューHTMLを必ず生成します。
+
+推奨パス:
+
+```text
+generated/reviews/<creator-slug>/<song-slug>.html
+```
+
+HTMLはMarkdown正本の派生物です。将来的に再生成可能であることを優先します。
+
+### 5.1 必須表示項目
+
+最低限、以下を見やすく表示します。
+
+- 曲名
+- 作者
+- 元Suno URL
+- caption
+- Style原文
+- Clean Lyrics
+- 歌詞の特徴
+- 核となるキーワード
+- symbols / motifs
+- 歌詞・意味構造の要約
+- Mermaid構造図
+- 音楽的特徴（取得できた場合）
+- Lyrics内Directive原文と位置
+- 再利用できそうなSunoノウハウ
+- Az Impression（存在する場合のみ）
+- レビュー時に触れられそうな観点
+
+### 5.2 HTML UX
+
+- 1画面で概要を掴めること
+- Clean Lyricsは読みやすさを最優先すること
+- raw lyricsは必要なら折りたたみ表示にすること
+- Style / Directiveはコピーしやすくすること
+- Mermaidをブラウザ上で視覚化できること
+- 「取得事実」「AI分析」「Az主観」を視覚的に混同しないこと
+- 欠落項目は無理に埋めず、未取得であることが分かる表示にすること
+
+### 5.3 レビュー観点
+
+HTMLにはレビュー文を自動決定するのではなく、Azが自分でレビューを書くための候補観点を提示します。
+
+例:
+
+- この曲で意味変化が大きいフレーズ
+- 構造上の特徴
+- 1番と2番の対応
+- 音の変化と歌詞の変化が重なる箇所
+- Style / Directiveと実際の聴感の対応
+
+---
+
+## 6. Creator Record
 
 作者情報は作品群から徐々に形成します。
 
@@ -229,7 +290,7 @@ creators/<creator-slug>.md
 
 ---
 
-## 6. Knowledge Layer
+## 7. Knowledge Layer
 
 将来的に以下を横断知識として生成します。
 
@@ -257,7 +318,7 @@ knowledge/
 
 ---
 
-## 7. Search Goals
+## 8. Search Goals
 
 将来的に以下の問い合わせを可能にします。
 
@@ -272,7 +333,7 @@ knowledge/
 
 ---
 
-## 8. PoC Success Criteria
+## 9. PoC Success Criteria
 
 最初の1曲で以下が成立すればPoC成功です。
 
@@ -283,11 +344,13 @@ knowledge/
 5. Clean Lyricsが読みやすい
 6. Mermaidがその曲固有の構造を表している
 7. 音源由来の特徴とページ由来情報が区別されている
-8. Chatが後からGitHubの生成ファイルだけを読んで曲を十分に議論できる
+8. `generated/reviews/` にレビューHTMLを生成できる
+9. HTMLだけでレビューに必要な主要情報を見渡せる
+10. Chatが後からGitHubのSong Markdownだけを読んで曲を十分に議論できる
 
 ---
 
-## 9. Non-goals for PoC
+## 10. Non-goals for PoC
 
 最初から以下は実装しません。
 
@@ -298,4 +361,4 @@ knowledge/
 - 完全自動Creator統計
 - 音源ファイルの永続保存
 
-まずテキスト資産の品質を優先します。
+まずテキスト資産の品質と、1曲単位のHTML閲覧体験を優先します。
