@@ -90,32 +90,6 @@ flowchart LR
 
 ---
 
-## Music Analysis
-
-> Record only what can actually be observed from the public audio. If audio could not be inspected, state that explicitly.
-
-### Overall Sound
-
-{{ overall_sound }}
-
-### Instrumentation
-
-- 
-
-### Vocal
-
-- 
-
-### Energy / Density Curve
-
-- 
-
-### Section Transitions / Breaks / Climax
-
-- 
-
----
-
 ## Suno Prompt Knowledge
 
 ### Style Raw
@@ -126,13 +100,34 @@ flowchart LR
 
 ### Directives Observed in Lyrics
 
-| Directive | Position | Observed effect | Source/Inference |
+| Directive | Position | Structural role | Source/Inference |
 |---|---|---|---|
 |  |  |  |  |
 
 ### Reusable Notes
 
 - 
+
+---
+
+## Az Listening Notes
+
+> No listening note yet.
+
+### Raw Notes from Az
+
+- 
+
+### Structured Listening Tags
+
+- **Perceived mood:**
+- **Perceived instrumentation / texture:**
+- **Energy change:**
+- **Vocal impression:**
+- **Favorite sonic moment:**
+- **Useful reference for:**
+
+> These fields must be based on Az's own listening notes. Do not infer them from audio files, Style, or lyrics alone.
 
 ---
 
@@ -167,6 +162,14 @@ Points worth discussing when Az writes a review. These are prompts, not a finish
 Clearly distinguish facts from interpretation.
 
 - **Page-derived facts:**
-- **Audio-derived observations:**
-- **AI interpretation:**
+- **AI text analysis:**
+- **Az listening notes:**
+- **Az impression:**
 - **Unavailable / uncertain:**
+
+### Audio Handling Policy
+
+- Do not search for direct audio file URLs.
+- Do not download or convert m4a/mp3/wav files.
+- Do not perform automated audio analysis.
+- Sound-related notes must come from Az's own listening comments.
