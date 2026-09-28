@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "song_id": null,
+  "source_url": null,
+  "collected_at": null,
+  "title": null,
+  "creator": null,
+  "creator_url": null,
+  "published_at": null,
+  "model": null,
+  "duration": null,
+  "caption_raw": null,
+  "style_raw": null,
+  "lyrics_raw": null,
+  "extra_page_facts": {}
+}
