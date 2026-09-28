@@ -32,6 +32,8 @@ Markdownファイルを正本とします。
 8. 楽曲構造を一本道に固定しない
 9. 後から分類体系を変更できるよう、生データを残す
 10. HTMLは閲覧UIであり、HTMLのみを編集して知識を更新しない。更新はMarkdown正本へ反映し、HTMLを再生成する
+11. 音源ファイルの直接URL探索、ダウンロード、変換、保存をしない
+12. 音響特徴をAIが音源から自動抽出しない。聴感情報はAz本人が聴いて入力した内容を原則とする
 
 ---
 
@@ -49,8 +51,7 @@ Markdownファイルを正本とします。
 - caption
 - style
 - lyrics
-- 公開ページから取得可能な追加メタ情報
-- 公開音源を実際に聴ける場合、その音響的・構成的特徴
+- 公開ページ上で取得可能な追加テキスト情報
 - 初期的な歌詞解析
 - 初期Mermaid構造図
 - song Markdownの生成
@@ -58,13 +59,15 @@ Markdownファイルを正本とします。
 
 Workは、取得できなかった情報を補完・創作してはいけません。
 
+また、公開音源のファイル取得を目的とした操作は行いません。音源ファイルの直接URL探索、ダウンロード、変換、保存はこのプロジェクトの対象外です。
+
 ### Chat = curator / analyst
 
 GitHubへ取り込み済みのテキストを中心に扱います。
 
 - 解析の修正
 - 作者横断・曲横断の比較
-- Az Impressionの整理
+- Az Impression / Listening Notesの整理
 - Style / Directiveの知識化
 - 作者Fingerprintの更新
 - 類似曲探索
@@ -156,32 +159,36 @@ Sunoから実際に取得した一次情報。
 
 `flowchart TD` を固定使用しないこと。
 
-### 4.6 Music Analysis
+### 4.6 Az Listening Notes
 
-音源を確認できた場合のみ記録します。
+音の印象は、Az本人が実際に聴いて入力した内容を保存します。
 
-- tempo / perceived tempo
-- instrumentation
-- vocal character
-- energy curve
-- density changes
-- breaks / stops
-- section transitions
-- climax
-- notable production characteristics
+例:
 
-数値だけでなく、レビュー・制作に再利用できる言葉で記述します。
+- ピアノが冷たく感じる
+- サビで急に広がる
+- ボーカルが近く感じる
+- 2番からドラムが強くなる
+- ラスサビで一気に解放される
+
+原則:
+
+- AIが音源を取得して聴感を補完しない
+- Azの言葉を原文で残す
+- 必要ならChat側で構造化タグを追加する
+- Style / Directiveとの対応を考察する場合は「Azの聴感に基づく分析」と明示する
 
 ### 4.7 Suno Prompt Knowledge
 
-実際に使われた情報を最優先します。
+実際に使われたテキスト情報を最優先します。
 
 - `style_raw`
 - lyrics内に記述されたDirective原文
 - Directiveが置かれた位置
-- 実際に聞こえた効果（観測可能な場合）
+- 歌詞構造上、そのDirectiveが担っている役割
+- Az Listening Notesがある場合、その聴感との対応
 
-AIが音から推定したStyleは、`style_raw` と混同せず別項目にします。
+音からStyleを推定して `style_raw` の代わりにしてはいけません。
 
 ### 4.8 Az Impression
 
@@ -229,9 +236,9 @@ HTMLはMarkdown正本の派生物です。将来的に再生成可能である�
 - symbols / motifs
 - 歌詞・意味構造の要約
 - Mermaid構造図
-- 音楽的特徴（取得できた場合）
 - Lyrics内Directive原文と位置
 - 再利用できそうなSunoノウハウ
+- Az Listening Notes（存在する場合のみ）
 - Az Impression（存在する場合のみ）
 - レビュー時に触れられそうな観点
 
@@ -254,8 +261,8 @@ HTMLにはレビュー文を自動決定するのではなく、Azが自分で�
 - この曲で意味変化が大きいフレーズ
 - 構造上の特徴
 - 1番と2番の対応
-- 音の変化と歌詞の変化が重なる箇所
-- Style / Directiveと実際の聴感の対応
+- Directiveが歌詞構造上どこで使われているか
+- Az Listening Notesがある場合、Style / Directiveとどう対応して感じられたか
 
 ---
 
@@ -278,9 +285,9 @@ creators/<creator-slug>.md
 - frequently observed Style terms
 - recurrent structures
 - recurrent lyrical techniques
-- recurrent musical techniques
 - chronological changes
 - Az's accumulated impressions
+- Az's accumulated listening notes
 
 注意:
 
@@ -310,11 +317,11 @@ knowledge/
 - 実際に使われた表記
 - 使用曲
 - 同時に使われやすいStyle語
-- 実際に観測された効果
-- 効かなかった例
+- 歌詞構造上の配置
+- Az Listening Notesがある場合に観測された聴感
 - Azが再利用したいケース
 
-目標は「Sunoでこの言葉を書くとどうなりやすいか」を実曲ベースで検索できることです。
+目標は「Sunoでこの言葉を書くと、どのような曲・構造・聴感と結びついていたか」を実曲ベースで検索できることです。
 
 ---
 
@@ -322,7 +329,6 @@ knowledge/
 
 将来的に以下の問い合わせを可能にします。
 
-- 静かなピアノ始まりで最後だけ広がる曲
 - 1番と2番が対になっていて、ラスサビで意味が変わる曲
 - `[Break]` と `[Stop]` の実例
 - 祈るように感じた曲
@@ -330,6 +336,7 @@ knowledge/
 - 最近この作者の曲調がどう変化したか
 - この作者は以前どんなテーマを書いていたか
 - 実際に使われたStyleを参考に新曲用Style案を作る
+- Azの聴感メモで「サビで広がる」と記録された曲を探す
 
 ---
 
@@ -338,12 +345,12 @@ knowledge/
 最初の1曲で以下が成立すればPoC成功です。
 
 1. WorkがSuno URLへアクセスできる
-2. 一次情報を正しく取得できる
+2. 公開ページ上の一次テキスト情報を正しく取得できる
 3. `songs/` にMarkdownを生成できる
 4. rawとanalysisが分離されている
 5. Clean Lyricsが読みやすい
 6. Mermaidがその曲固有の構造を表している
-7. 音源由来の特徴とページ由来情報が区別されている
+7. 音源ファイルを探索・取得せずに処理が完結する
 8. `generated/reviews/` にレビューHTMLを生成できる
 9. HTMLだけでレビューに必要な主要情報を見渡せる
 10. Chatが後からGitHubのSong Markdownだけを読んで曲を十分に議論できる
@@ -360,5 +367,8 @@ knowledge/
 - 巨大なWeb UI
 - 完全自動Creator統計
 - 音源ファイルの永続保存
+- 音源ファイルの直接URL探索
+- 音源のダウンロード / 変換
+- AIによる自動音響解析
 
 まずテキスト資産の品質と、1曲単位のHTML閲覧体験を優先します。
