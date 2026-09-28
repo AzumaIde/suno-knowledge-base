@@ -2,86 +2,140 @@
 
 ## 1. Goal
 
-このシステムは「レビュー文を自動生成するツール」ではなく、Sunoで公開された楽曲から得られる知識を蓄積し、後のレビュー・作者理解・作曲・作詞・Style設計へ再利用するための知識基盤です。
+このシステムは単なるレビュー支援ではなく、Sunoで公開された楽曲から得られる知識を蓄積し、後のレビュー・作者理解・作曲・作詞・Style設計へ再利用するための知識基盤です。
 
-主なユースケース:
+主な用途:
 
-1. URLを渡して1曲を取り込む
-2. 作者ごとの過去曲・特徴・変化を見る
-3. 歌詞や構造の特徴を比較する
-4. 実際に使われたStyle / Directiveを検索する
-5. 「こんな雰囲気の曲を作りたい」から実例を逆引きする
-6. Azが曲を聴いたときの主観的な感覚を記録し、後の検索や制作に使う
-7. 取り込み直後に、人間がレビューしやすいHTMLビューを生成する
-
----
-
-## 2. Canonical Data
-
-Markdownファイルを正本とします。
-
-原則:
-
-1. このリポジトリは音源ファイルの保管庫ではない
-2. Markdownをcanonical source of truthとする
-3. HTML、索引、集計、作者カルテは派生物として再生成可能にする
-4. Sunoページから取得した一次情報とAI解釈を混ぜない
-5. Style原文と歌詞内Directive原文は可能な限り逐語保存する
-6. 欠落情報を推測して埋めない
-7. Azの主観と客観解析を分離して保存する
-8. 楽曲構造を一本道に固定しない
-9. 後から分類体系を変更できるよう、生データを残す
-10. HTMLは閲覧UIであり、HTMLのみを編集して知識を更新しない。更新はMarkdown正本へ反映し、HTMLを再生成する
-11. 音源ファイルの直接URL探索、ダウンロード、変換、保存をしない
-12. 音響特徴をAIが音源から自動抽出しない。聴感情報はAz本人が聴いて入力した内容を原則とする
+1. Suno URLから一次情報を保存する
+2. 歌詞・構造・Style / Directiveを分析する
+3. 作者ごとの特徴・変化を追跡する
+4. Azの主観的な印象や聴感を記録する
+5. 「こんな曲を作りたい」から実際の使用例を逆引きする
+6. 人間が読みやすいレビューHTMLを生成する
 
 ---
 
-## 3. Chat / Work Responsibility
+## 2. Three-Layer Model
 
-### Work = importer / field worker
+このリポジトリは3層で管理します。
 
-外部サイトへのアクセスが必要な処理を担当します。
+### Layer 1: Raw JSON = 取得事実
 
-- 指定Suno URLを開く
+```text
+raw/suno/<song-id>.json
+```
+
+WorkがSuno公開ページをブラウザで確認し、一次情報のみを保存します。
+
+Raw JSONは**不変の採取記録**として扱い、分析結果を書き込みません。
+
+### Layer 2: Markdown = 解釈済み知識の正本
+
+```text
+songs/<creator-slug>/<song-slug>.md
+creators/<creator-slug>.md
+knowledge/...
+```
+
+Chat / ちーがRaw JSONを読み、歌詞整形・構造分析・Mermaid・ノウハウ化などを行います。
+
+### Layer 3: HTML = 閲覧用派生物
+
+```text
+generated/reviews/<creator-slug>/<song-slug>.html
+```
+
+HTMLはMarkdownから再生成可能なビューです。
+
+---
+
+## 3. Role Separation
+
+### Work = Collector
+
+Workの責務は、通常Chatでは安定取得できないSunoページの一次情報をブラウザ経由で採取することだけです。
+
+取得対象:
+
+- song ID
 - title
 - creator
 - creator URL
 - song URL
-- caption
-- style
-- lyrics
-- 公開ページ上で取得可能な追加テキスト情報
-- 初期的な歌詞解析
-- 初期Mermaid構造図
-- song Markdownの生成
-- song Markdownを元にしたレビューHTMLの生成
+- caption raw
+- style raw
+- lyrics raw
+- published date
+- model
+- duration
+- その他ページ上に明示されたテキスト情報
 
-Workは、取得できなかった情報を補完・創作してはいけません。
+Workは分析しません。
 
-また、公開音源のファイル取得を目的とした操作は行いません。音源ファイルの直接URL探索、ダウンロード、変換、保存はこのプロジェクトの対象外です。
+### Chat / ちー = Curator / Analyst
 
-### Chat = curator / analyst
+ChatはRaw JSONを読み、以下を担当します。
 
-GitHubへ取り込み済みのテキストを中心に扱います。
-
-- 解析の修正
-- 作者横断・曲横断の比較
-- Az Impression / Listening Notesの整理
-- Style / Directiveの知識化
-- 作者Fingerprintの更新
-- 類似曲探索
-- 制作時の逆引き
-- Google Drive等への人間向けまとめ
-- Markdown正本の更新後にHTML再生成を指示・支援
-
-Chatが外部ページへ取り直しに行かなくても成立する情報量を、Workの取り込み時に確保することを目標とします。
+- Clean Lyrics
+- 歌詞の特徴
+- 核となるキーワード
+- symbols / motifs
+- narrative / semantic progression
+- 構造分類
+- Mermaid構造図
+- Style / Directive知識化
+- Creator情報
+- 作者間・曲間比較
+- Az Listening Notes / Az Impressionの整理
+- Song Markdown生成
+- HTML生成
+- Knowledge Layer更新
+- 将来の作曲時の逆引き
 
 ---
 
-## 4. Song Record
+## 4. Raw JSON Contract
 
-1曲につき原則1 Markdownファイル。
+推奨パス:
+
+```text
+raw/suno/<song-id>.json
+```
+
+Raw JSONには一次情報だけを入れます。
+
+```json
+{
+  "schema_version": 1,
+  "song_id": "...",
+  "source_url": "https://suno.com/song/...",
+  "collected_at": "...",
+  "title": "...",
+  "creator": "...",
+  "creator_url": "...",
+  "published_at": "...",
+  "model": "...",
+  "duration": "...",
+  "caption_raw": "...",
+  "style_raw": "...",
+  "lyrics_raw": "...",
+  "extra_page_facts": {}
+}
+```
+
+原則:
+
+- `style_raw` は全文を加工せず保持
+- `lyrics_raw` はDirectiveやセクション記法も含め原文保持
+- 欠落情報は `null`
+- 推測・要約・正規化をRawへ混ぜない
+- 音源情報の直接URLは保存しない
+
+---
+
+## 5. Song Knowledge Record
+
+ChatがRaw JSONから生成します。
 
 推奨パス:
 
@@ -89,35 +143,24 @@ Chatが外部ページへ取り直しに行かなくても成立する情報量�
 songs/<creator-slug>/<song-slug>.md
 ```
 
-ファイル内は次の情報層を分離します。
+### 5.1 Source Facts
 
-### 4.1 Source Facts
+Raw JSONへの参照と、主要な一次情報。
 
-Sunoから実際に取得した一次情報。
-
-- title
-- creator
-- source_url
-- creator_url
-- caption_raw
-- style_raw
-- lyrics_raw
-- collected_at
-
-### 4.2 Clean Lyrics
+### 5.2 Clean Lyrics
 
 レビュー・読解用に整形した歌詞。
 
 ルール:
 
-- `[Verse]` 等のセクション名は必要に応じて構造情報として残してよいが、歌唱されない演出Directiveは本文から除外する
-- 一行一単語など、意味単位として不自然な改行はまとめる
+- 言葉自体を書き換えない
+- 歌唱されない演出Directiveは本文から除外
+- 必要なら `[Verse]` 等のセクションラベルは残す
+- 一行一語など不自然な改行は意味単位へまとめる
 - 文意・呼吸・反復を壊さない
 - 意味のあるまとまりごとに空行を入れる
-- 言葉自体は書き換えない
-- raw lyricsは必ず別に保持する
 
-### 4.3 Lyrics Analysis
+### 5.3 Lyrics Analysis
 
 - themes
 - core keywords
@@ -128,178 +171,92 @@ Sunoから実際に取得した一次情報。
 - contrast
 - notable wording
 
-### 4.4 Structure Analysis
-
-構造は単純な縦一直線に固定しません。
+### 5.4 Structure Analysis
 
 代表的な構造タイプ:
 
-- `parallel_evolution` — 1番・2番・大サビ等が対応し、同じ器の中で意味が変化する
-- `spiral_repetition` — 同じ場所へ戻るように見えつつ、感情や意味が一段ずつ進む
-- `linear_narrative` — 出来事や感情が前へ進み続ける一本道
-- `dual_layer` — 過去/現在、二者、現実/内面など複数レイヤーが並走する
-- `contrast_reversal` — 前半と後半が対照・反転する
-- `hybrid` — 上記の複合
+- `parallel_evolution` — 1番・2番・大サビ等が対応し、同じ器の中で意味が変化
+- `spiral_repetition` — 反復しながら感情や意味が一段ずつ進む
+- `linear_narrative` — 一本道で前へ進む
+- `dual_layer` — 過去/現在、二者、現実/内面など複数レイヤーが並走
+- `contrast_reversal` — 前半と後半が対照・反転
+- `hybrid` — 複合
 
-分類名よりも、実際の関係性を正確に表すことを優先します。
+分類名より、実際の関係性を正確に表すことを優先します。
 
-### 4.5 Mermaid
+### 5.5 Mermaid
 
-最低1つ、意味構造を視覚化するMermaid図を持たせます。
+最低1つ、意味構造を視覚化します。
 
-必要に応じて複数図を使用できます。
+`flowchart TD` 固定にはしません。
+曲によって左右比較、対称構造、二層構造などを使い分けます。
 
-例:
-
-- 曲のセクション構造
-- 1番 / 2番 / 大サビの対応
-- 感情推移
-- 過去と現在の並行構造
-- 同一フレーズの意味変化
-
-`flowchart TD` を固定使用しないこと。
-
-### 4.6 Az Listening Notes
-
-音の印象は、Az本人が実際に聴いて入力した内容を保存します。
-
-例:
-
-- ピアノが冷たく感じる
-- サビで急に広がる
-- ボーカルが近く感じる
-- 2番からドラムが強くなる
-- ラスサビで一気に解放される
-
-原則:
-
-- AIが音源を取得して聴感を補完しない
-- Azの言葉を原文で残す
-- 必要ならChat側で構造化タグを追加する
-- Style / Directiveとの対応を考察する場合は「Azの聴感に基づく分析」と明示する
-
-### 4.7 Suno Prompt Knowledge
-
-実際に使われたテキスト情報を最優先します。
+### 5.6 Suno Prompt Knowledge
 
 - `style_raw`
-- lyrics内に記述されたDirective原文
-- Directiveが置かれた位置
-- 歌詞構造上、そのDirectiveが担っている役割
-- Az Listening Notesがある場合、その聴感との対応
+- Lyrics内Directive原文
+- Directiveの配置
+- 歌詞構造上の役割
+- 他曲との共通・相違
+- 再利用候補
 
-音からStyleを推定して `style_raw` の代わりにしてはいけません。
+### 5.7 Az Listening Notes / Impression
 
-### 4.8 Az Impression
+Az本人が実際に聴いた感想を保存します。
 
-Az本人の感覚を保存する領域です。
-
-例:
-
-- first impression
-- favorite moment
-- emotion words
-- colors / scenery
-- physical sensation
-- what felt unusual
-- when Az would reference this song
-- free-form notes
-
-Azが短い感想しか残していない場合も、その原文を保存します。AIによる構造化は別項目にします。
+AIが音源から自動補完しません。
 
 ---
 
-## 5. Generated HTML Review
+## 6. Generated HTML Review
 
-各Song Markdownから、閲覧用レビューHTMLを必ず生成します。
-
-推奨パス:
+ChatがSong Markdownから生成します。
 
 ```text
 generated/reviews/<creator-slug>/<song-slug>.html
 ```
 
-HTMLはMarkdown正本の派生物です。将来的に再生成可能であることを優先します。
+必須表示候補:
 
-### 5.1 必須表示項目
-
-最低限、以下を見やすく表示します。
-
-- 曲名
-- 作者
-- 元Suno URL
-- caption
+- 曲名 / 作者 / Suno URL
+- Caption
 - Style原文
 - Clean Lyrics
 - 歌詞の特徴
-- 核となるキーワード
+- 核キーワード
 - symbols / motifs
-- 歌詞・意味構造の要約
-- Mermaid構造図
-- Lyrics内Directive原文と位置
-- 再利用できそうなSunoノウハウ
-- Az Listening Notes（存在する場合のみ）
-- Az Impression（存在する場合のみ）
+- 構造分析
+- Mermaid
+- Lyrics内Directive
+- 再利用可能なSunoノウハウ
+- Az Listening Notes / Impression（存在する場合）
 - レビュー時に触れられそうな観点
 
-### 5.2 HTML UX
-
-- 1画面で概要を掴めること
-- Clean Lyricsは読みやすさを最優先すること
-- raw lyricsは必要なら折りたたみ表示にすること
-- Style / Directiveはコピーしやすくすること
-- Mermaidをブラウザ上で視覚化できること
-- 「取得事実」「AI分析」「Az主観」を視覚的に混同しないこと
-- 欠落項目は無理に埋めず、未取得であることが分かる表示にすること
-
-### 5.3 レビュー観点
-
-HTMLにはレビュー文を自動決定するのではなく、Azが自分でレビューを書くための候補観点を提示します。
-
-例:
-
-- この曲で意味変化が大きいフレーズ
-- 構造上の特徴
-- 1番と2番の対応
-- Directiveが歌詞構造上どこで使われているか
-- Az Listening Notesがある場合、Style / Directiveとどう対応して感じられたか
+「取得事実」「AI分析」「Az主観」を視覚的に分離します。
 
 ---
 
-## 6. Creator Record
-
-作者情報は作品群から徐々に形成します。
-
-推奨パス:
+## 7. Creator Layer
 
 ```text
 creators/<creator-slug>.md
 ```
 
-保持したい情報:
+作品群から形成します。
 
-- creator name
-- profile URL
-- known songs in repository
+- known songs
 - frequently observed themes
 - frequently observed Style terms
 - recurrent structures
 - recurrent lyrical techniques
 - chronological changes
 - Az's accumulated impressions
-- Az's accumulated listening notes
 
-注意:
-
-「作者本人の性格」を推測しません。
-
-あくまで「このリポジトリに収録した作品群に見られる傾向」として記述します。
+作者本人の性格は推測せず、収録作品群の傾向として記述します。
 
 ---
 
-## 7. Knowledge Layer
-
-将来的に以下を横断知識として生成します。
+## 8. Knowledge Layer
 
 ```text
 knowledge/
@@ -310,65 +267,38 @@ knowledge/
 └─ techniques/
 ```
 
-### Example: Directive Knowledge
+目標は「Sunoでこの表現を使った実例」を実曲ベースで検索できることです。
 
-`knowledge/directives/final-chorus-explosive.md`
+例:
 
-- 実際に使われた表記
-- 使用曲
-- 同時に使われやすいStyle語
-- 歌詞構造上の配置
-- Az Listening Notesがある場合に観測された聴感
-- Azが再利用したいケース
-
-目標は「Sunoでこの言葉を書くと、どのような曲・構造・聴感と結びついていたか」を実曲ベースで検索できることです。
+- `[Break]` / `[Stop]` の使用例
+- `explosive final chorus` の実例
+- 1番2番が対応してラスサビで意味が変わる曲
+- Azが「祈る感じ」と記録した曲
+- 特定作者の最近の作風変化
 
 ---
 
-## 8. Search Goals
+## 9. Audio Policy
 
-将来的に以下の問い合わせを可能にします。
+このプロジェクトでは以下を行いません。
 
-- 1番と2番が対になっていて、ラスサビで意味が変わる曲
-- `[Break]` と `[Stop]` の実例
-- 祈るように感じた曲
-- Azが「冷たい朝」と感じた曲
-- 最近この作者の曲調がどう変化したか
-- この作者は以前どんなテーマを書いていたか
-- 実際に使われたStyleを参考に新曲用Style案を作る
-- Azの聴感メモで「サビで広がる」と記録された曲を探す
-
----
-
-## 9. PoC Success Criteria
-
-最初の1曲で以下が成立すればPoC成功です。
-
-1. WorkがSuno URLへアクセスできる
-2. 公開ページ上の一次テキスト情報を正しく取得できる
-3. `songs/` にMarkdownを生成できる
-4. rawとanalysisが分離されている
-5. Clean Lyricsが読みやすい
-6. Mermaidがその曲固有の構造を表している
-7. 音源ファイルを探索・取得せずに処理が完結する
-8. `generated/reviews/` にレビューHTMLを生成できる
-9. HTMLだけでレビューに必要な主要情報を見渡せる
-10. Chatが後からGitHubのSong Markdownだけを読んで曲を十分に議論できる
-
----
-
-## 10. Non-goals for PoC
-
-最初から以下は実装しません。
-
-- SQLite
-- ベクトルDB
-- 自動ランキング
-- 巨大なWeb UI
-- 完全自動Creator統計
-- 音源ファイルの永続保存
 - 音源ファイルの直接URL探索
-- 音源のダウンロード / 変換
-- AIによる自動音響解析
+- m4a / mp3 / wav等のダウンロード
+- 音源変換
+- 音源ファイル保存
+- 自動音響解析
 
-まずテキスト資産の品質と、1曲単位のHTML閲覧体験を優先します。
+音の印象はAz本人のListening Notesを使います。
+
+---
+
+## 10. Success Criteria
+
+1. Workが1曲を短時間でRaw JSONへ保存できる
+2. Raw JSONにStyle全文・Lyrics全文など一次情報が保持される
+3. ChatがRaw JSONだけからSong Markdownを作れる
+4. Clean Lyricsが読みやすい
+5. Mermaidがその曲固有の構造を表す
+6. HTMLをChat側で生成できる
+7. Workを再度使わずに作者比較・Style検索・知識化ができる
