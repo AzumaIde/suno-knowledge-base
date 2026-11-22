@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>雨停以後 — Review</title>
+  <style>
+    :root { color-scheme: light; --ink:#172033; --muted:#667085; --line:#d8dee9; --paper:#fff; --wash:#f4f7fb; --fact:#eef6ff; --analysis:#f4f0ff; --az:#fff4e8; --accent:#5b5bd6; --green:#087f5b; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:linear-gradient(145deg,#edf2f7,#f8f3ff 55%,#edf8f4); color:var(--ink); font:16px/1.72 system-ui,-apple-system,"Segoe UI","Noto Sans JP",sans-serif; }
+    main { width:min(1120px,calc(100% - 28px)); margin:28px auto 64px; }
+    header,.panel { background:rgba(255,255,255,.94); border:1px solid rgba(141,153,174,.34); border-radius:20px; box-shadow:0 16px 44px rgba(39,54,84,.08); }
+    header { padding:30px; }
+    h1 { margin:.15rem 0 .4rem; font-size:clamp(2rem,5vw,4.4rem); line-height:1.08; letter-spacing:-.045em; }
+    h2 { margin:0 0 1rem; font-size:1.35rem; }
+    h3 { margin:1.5rem 0 .5rem; font-size:1.04rem; }
+    p { margin:.45rem 0; }
+    a { color:#3f46b7; }
+    .eyebrow { color:var(--accent); font-weight:800; letter-spacing:.12em; text-transform:uppercase; font-size:.78rem; }
+    .byline,.muted { color:var(--muted); }
+    .grid { display:grid; grid-template-columns:repeat(12,1fr); gap:16px; margin-top:16px; }
+    .panel { padding:24px; grid-column:span 12; }
+    .span-7 { grid-column:span 7; } .span-5 { grid-column:span 5; } .span-6 { grid-column:span 6; }
+    .tag { display:inline-block; margin:4px 6px 0 0; padding:4px 10px; border-radius:999px; background:#eef0ff; color:#3c419d; font-size:.86rem; font-weight:650; }
+    .facts { background:var(--fact); border-left:5px solid #3182ce; }
+    .analysis { background:var(--analysis); border-left:5px solid #7656c5; }
+    .az { background:var(--az); border-left:5px solid #e07a1f; }
+    .notice { border-radius:12px; padding:12px 14px; background:#fff7db; border:1px solid #f0d888; }
+    pre { margin:0; padding:16px; white-space:pre-wrap; overflow-wrap:anywhere; background:#121827; color:#ecf2ff; border-radius:13px; font:13px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace; }
+    .lyrics { columns:2 340px; column-gap:34px; }
+    .lyrics h3,.lyrics h4 { break-after:avoid; }
+    .lyrics p { break-inside:avoid; white-space:pre-line; }
+    details { border:1px solid var(--line); border-radius:12px; padding:10px 12px; background:var(--paper); }
+    summary { cursor:pointer; font-weight:750; }
+    table { width:100%; border-collapse:collapse; font-size:.92rem; }
+    th,td { text-align:left; vertical-align:top; padding:10px; border-bottom:1px solid var(--line); }
+    th { color:#485166; background:#f7f8fb; }
+    ul { padding-left:1.25rem; }
+    code { background:#eef0f5; padding:.12rem .35rem; border-radius:5px; }
+    .mermaid { background:white; border:1px solid var(--line); border-radius:14px; padding:14px; overflow:auto; }
+    .review { font-size:1.08rem; }
+    .review strong { color:#413f9f; }
+    footer { margin-top:18px; color:var(--muted); font-size:.86rem; text-align:center; }
+    @media(max-width:800px){ .span-7,.span-5,.span-6{grid-column:span 12} header,.panel{padding:19px} }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="eyebrow">Suno knowledge review · page text based</div>
+    <h1>雨停以後</h1>
+    <p class="byline">Kamo（高知県） · <a href="https://suno.com/song/45e528db-fc55-4b21-bc20-64c4a5b21d3e">Sunoで開く</a></p>
+    <p class="muted">このページは公開ページのテキスト（歌詞・Style・キャプション）だけから作ったレビュー下書きです。Azの感想欄は空欄です。</p>
+  </header>
+  <div class="grid">
+    <section class="panel facts span-12">
+      <div class="eyebrow">Source Facts</div>
+      <h2>公開ページで確認した情報</h2>
+      <p><strong>公開日:</strong> 2026年11月21日 23:14</p>
+<p><strong>モデル:</strong> V6-wild</p>
+<p><strong>長さ:</strong> 4:52</p>
+<p><strong>再生数:</strong> 23</p>
+<p><strong>いいね:</strong> 12</p>
+<p><strong>コメント:</strong> 5</p>
+      <h3>Caption</h3>
+      <p>多年以後，一首熟悉的歌，<br>讓我想起曾經一起走過的街。<br><br>雨停了，街燈依然亮著。<br>那些回不去的日子，<br>原來一直都在心裡。<br><br>有些人不再同行，<br>卻從未真正離開記憶。</p>
+    </section>
+    <section class="panel analysis span-12">
+      <div class="eyebrow">AI Text Analysis</div>
+      <h2>核となる読み</h2>
+      <p>雨が上がった台北の街を歩く語り手が、かつて一緒に歩いた相手を思い出す歌。「雨停以後　街燈還亮著」のリフレインが3回戻り、毎回後半だけが変わる。1回目は相手への問い（路口で立ち止まって自分を思い出すか）、2回目は「戻ってこなくていい、覚えていてくれればいい」という受容、最終回は語り手がついに路口を歩き抜け、「思い出したときに微笑める」ことが最良の別れだと結ぶ。Bridgeの「下次見」が「こんなに遠いとは思わなかった」で裏切られる。</p>
+      <h3>テーマ</h3>
+      <ul><li>雨上がりの街と、戻らない日々への郷愁</li>
+<li>別れた相手を思い出しながら前に進むこと</li>
+<li>「さよなら」を言わなかった別れ</li>
+<li>思い出を手放さずに微笑めるようになること</li></ul>
+      <p><strong>核の候補:</strong> Chorusの前半を固定し後半だけを変えるリフレイン変奏で、問い→受容→前進という心の移動を描くこと</p>
+    </section>
+    <section class="panel span-12">
+      <div class="eyebrow">Clean Lyrics</div>
+      <h2>日本語歌詞</h2>
+      <div class="lyrics">
+<p>[Intro]<br>
+雨停了<br>
+街燈還亮著<br>
+我又走到那個路口</p>
+<p>[Verse 1]<br>
+下班以後的捷運站　人群慢慢走出月台<br>
+手機裡一首舊歌　唱到我們熟悉的那一句<br>
+便利商店換了招牌　轉角的店也不在<br>
+只有那盞黃色的燈　還照著濕濕的街</p>
+<p>[Pre-Chorus]<br>
+那時候我們總以為　明天還能一起走<br>
+有些再見說得太輕　後來卻隔了好多年</p>
+<p>[Chorus]<br>
+雨停以後　街燈還亮著<br>
+像那一年　你等我的時刻<br>
+我們走過的路沒有變長<br>
+只是回家的方向不同了<br>
+如果有一天　你也聽見<br>
+那首我們一起唱過的歌<br>
+會不會在某個路口　忽然停下腳步<br>
+想起我</p>
+<p>[Verse 2]<br>
+今天有人問我過得好嗎　我笑著說一切都還好<br>
+工作忙得忘了季節　連生日也過得很平常<br>
+偶爾經過那家早餐店　才發現門口換了模樣<br>
+以前你總把熱豆漿　放進我冰冷的手掌</p>
+<p>[Pre-Chorus 2]<br>
+原來長大不是忘記　只是學會不再提起<br>
+直到一場普通的雨　把那些日子帶回心裡</p>
+<p>[Chorus 2]<br>
+雨停以後　街燈還亮著<br>
+我們卻走到了不同的生活<br>
+你有你的城市和遠方<br>
+我有每天準時醒來的早晨<br>
+如果有一天　你也聽見<br>
+那首我們一起唱過的歌<br>
+不必特地回來找我<br>
+只要你也記得　就好了</p>
+<p>[Bridge]<br>
+那天我們說　下次見<br>
+誰也沒有想到　下次　會這麼遠</p>
+<p>[Final Chorus]<br>
+雨停以後　街燈還亮著<br>
+我終於走過那個路口<br>
+沒有停下來等誰　也沒有再問為什麼<br>
+只是輕輕唱著　那首還記得的歌<br>
+原來最好的告別　不是把你忘了<br>
+是想起你的時候　我還能微笑</p>
+<p>[Outro]<br>
+雨停了<br>
+街燈　還亮著</p>
+<p>[Instrumental Tail]</p>
+      </div>
+    </section>
+    <section class="panel span-12">
+      <div class="eyebrow">Suno Prompt Knowledge</div>
+      <h2>Style原文</h2>
+      <p>Contemporary Taiwanese Mandarin nostalgic pop ballad, 78 BPM, intimate expressive female mezzo-soprano, natural Taiwan Mandarin pronunciation, warm felt piano, delicate acoustic guitar, soft cinematic strings, subtle vintage cassette texture, restrained emotional storytelling, beautiful memorable chorus, bittersweet urban nostalgia, gentle AOR harmonic colors, warm analog production, spacious stereo depth, realistic breath, subtle dynamic rise, no excessive belting, no EDM, no dramatic key change, intimate spoken bridge, final chorus resolves softly, long piano resonance, distant rainy Taipei street ambience, lingering emotional silence, 8-second instrumental outro（全文はシート参照）</p>
+    </section>
+    <section class="panel az span-12">
+      <div class="eyebrow">Az Notes</div>
+      <h2>Az Listening Notes / Impression</h2>
+      <p class="muted">まだありません。聴いた感想はシート（Markdown）側に Az の言葉で記入します。</p>
+    </section>
+    <section class="panel span-12">
+      <div class="eyebrow">Review Hooks</div>
+      <h2>レビューで触れたい観点</h2>
+      <ul><li>Chorusの前半が3回とも同じで、後半だけが「問い→受容→前進」と変わるリフレイン変奏</li>
+<li>「原來長大不是忘記／只是學會不再提起」という、大人になることの定義</li>
+<li>「下次見」が最後の言葉だったことがBridgeで明かされる仕掛け</li>
+<li>熱豆漿という触覚の記憶が、郷愁を具体的にしている点</li>
+<li>Final Chorusが盛り上げではなく「柔らかい解決」として設計されている点</li>
+<li>IntroとOutroが同じ2行で対応し、雨上がりの街の一周として閉じる構成</li></ul>
+    </section>
+  </div>
+</main>
+</body>
+</html>
